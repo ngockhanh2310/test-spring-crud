@@ -17,7 +17,16 @@ spring:
       hibernate:
         format_sql: true
 
+  security:
+    user:
+      name: admin
+      password: admin
+
 server:
   port: 8080
   servlet:
     context-path: /hello-spring
+
+jwt:
+  secret:
+    key: "your-very-very-long-and-secret-key-that-is-at-least-256-bits-long"
