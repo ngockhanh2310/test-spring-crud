@@ -7,7 +7,6 @@ import com.example.hello_spring.service.BookService;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,7 +35,7 @@ public class BookController {
         return bookService.getAllBooks();
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping("/update/{id}")
     public BookResponseDTO updateBook(
             @PathVariable Long id,
             @Valid @RequestBody BookRequestDTO requestDTO) {
@@ -44,8 +43,10 @@ public class BookController {
     }
 
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<ApiResponse> deleteBook(@PathVariable Long id) {
+    public ApiResponse<BookResponseDTO> deleteBook(@PathVariable Long id) {
         String message = bookService.deleteBooks(id);
-        return ResponseEntity.ok(new ApiResponse(message));
+        return ApiResponse.<BookResponseDTO>builder()
+                .message(message)
+                .build();
     }
 }
