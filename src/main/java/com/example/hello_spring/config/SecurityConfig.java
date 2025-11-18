@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     String[] path = {"/api/v1/auth/**"};
 
     @Bean
@@ -45,7 +47,10 @@ public class SecurityConfig {
                                 .anyRequest()  // ...còn lại
                                 .authenticated() // ...phải được xác thực
                 )
-                .authenticationProvider(authenticationProvider);// máy xác thực
+                .authenticationProvider(authenticationProvider)
+                // 2. "CÀI ĐẶT" BỘ LỌC
+                // (Chạy JwtAuthFilter TRƯỚC bộ lọc UsernamePassword...)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);// máy xác thực
         // 6. Xây dựng và trả về chuỗi lọc
         return http.build();
     }
